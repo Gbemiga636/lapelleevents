@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- /enquiry.html — Lapelle Events Enquiry Page -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lapelle Events — Enquiry</title>
+  <meta name="description" content="Make an enquiry with Lapelle Events. Share your event details and we’ll get back to you with a tailored plan." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+       :root{
+      --purple-50:#f5edff;
+      --purple-100:#e5d6ff;
+      --purple-200:#cdb3ff;
+      --purple-300:#b28cff;
+      --purple-400:#9966ff;
+      --purple-500:#7a3cff;
+      --purple-600:#652ee6;
+      --purple-700:#5226be;
+      --purple-800:#3e1f93;
+      --purple-900:#2c186b;
+      --white:#ffffff;
+      --black:#0e0b14;
+      --text:#1b132b;
+      --muted:#6d5f80;
+      --grad-1: linear-gradient(135deg, #a770ef 0%, #cf8bf3 35%, #fdb99b 100%);
+      --grad-2: linear-gradient(135deg, #7a3cff 0%, #ff68d7 50%, #a1a9ff 100%);
+      --grad-ink: linear-gradient(90deg, #7a3cff, #cf8bf3 60%, #a1a9ff);
+      --glass: rgba(255,255,255,0.10);
+      --shadow: 0 10px 30px rgba(60, 20, 100, .2);
+      --radius: 16px;
+      --radius-sm: 10px;
+      --transition: 200ms ease;
+      --header-h: 64px;
+    }
+    *,*::before,*::after{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,Arial,Helvetica,sans-serif;
+      color:var(--text);
+      background:var(--white);
+      line-height:1.6;
+      -webkit-font-smoothing:antialiased;
+      text-rendering:optimizeLegibility;
+      scroll-behavior:smooth;
+    }
+    a{color:inherit;text-decoration:none}
+    img{max-width:100%;display:block}
+    /* Loader */
+    .loader{
+      position:fixed;inset:0;z-index:9999;background:radial-gradient(1200px 600px at 20% 10%, #f3e9ff, #f6f0ff 30%, #ffffff 75%);
+      display:grid;place-items:center;overflow:hidden;
+    }
+  .loader__wrap {
+  position: relative;
+  width: min(340px, 90vw);
+  height: 220px;
+  border-radius: var(--radius);
+  background: var(--glass);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(122,60,255,.15);
+  display: flex;
+  justify-content: center;  /* <-- centers horizontally */
+  align-items: center;      /* <-- centers vertically */
+  overflow: hidden;
+}
+
+.loader__logo {
+  width: 180px;
+  position: relative;
+  transform-origin: center;  /* keep spin in place */
+  animation:
+    slideIn 0.8s ease-out forwards,
+    spin 1.2s linear 0.8s infinite;
+}
+
+@keyframes slideIn {
+  from { transform: translateY(-150%) scale(0.8); opacity: 0; }
+  to   { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+@keyframes spin {
+  0%   { transform: translateY(0) rotate(0deg) scale(1); }
+  50%  { transform: translateY(0) rotate(180deg) scale(1.2); }
+  100% { transform: translateY(0) rotate(360deg) scale(1); }
+}
+    .loader--hide{animation: fadeOut .7s ease forwards}
+    @keyframes fadeOut{to{opacity:0; visibility:hidden}}
+    /* Header */
+    .header{
+      position:sticky; top:0; z-index:1000; height:var(--header-h); display:grid; grid-template-columns:48px 1fr 48px; align-items:center; background:rgba(255,255,255,.85); backdrop-filter:saturate(1.2) blur(10px); border-bottom:1px solid rgba(122,60,255,.08)
+    }
+    .header__btn{display:grid; place-items:center; height:48px; width:48px; cursor:pointer}
+    .burger{position:relative; width:22px; height:14px}
+    .burger span, .burger::before, .burger::after{
+      content:""; position:absolute; left:0; right:0; height:2px; background:var(--purple-700); transition: transform .25s ease, opacity .25s ease, top .25s ease;
+    }
+    .burger span{top:6px}
+    .burger::before{top:0}
+    .burger::after{top:12px}
+    .burger.is-open span{opacity:0}
+    .burger.is-open::before{top:6px; transform:rotate(45deg)}
+    .burger.is-open::after{top:6px; transform:rotate(-45deg)}
+    .logo {
+  justify-self: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo img {
+  max-height: 80px; /* fits header height (64px) */
+  width: auto;
+}
+    .header__cta{justify-self:end; color:#25D366}
+    .header__cta a{display:grid; place-items:center; height:48px; width:48px}
+    .header__cta a:focus-visible{outline:3px solid var(--purple-400); outline-offset:2px; border-radius:8px}
+
+/* Step 1: Slide in from top */
+@keyframes slideIn {
+  from { transform: translateY(-150%) scale(0.8); opacity: 0; }
+  to   { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+/* Step 2: Rotate in a circle */
+@keyframes spin {
+  from { transform: translateY(0) rotate(0deg) scale(1); }
+  to   { transform: translateY(0) rotate(360deg) scale(1); }
+}
+
+/* Step 3: Stay centered */
+@keyframes stay {
+  from { transform: translateY(0) rotate(360deg) scale(1); }
+  to   { transform: translateY(0) rotate(360deg) scale(1); }
+}
+    /* Menu Overlay */
+    .nav{
+      position:fixed; inset:0; z-index:999; background:rgba(22,9,34,.72); backdrop-filter: blur(8px); transform: translateY(-100%); transition: transform .28s ease;
+    }
+    .nav.is-open{transform: translateY(0)}
+    .nav__panel{
+      max-width:900px; margin:calc(var(--header-h) + 16px) auto; background:rgba(255,255,255,.92); border-radius:24px; box-shadow:var(--shadow); padding:28px;
+    }
+    .nav__grid{
+      display:grid; gap:16px; grid-template-columns:1fr; text-align:center;
+    }
+    .nav__link{
+      font-size:clamp(18px,2.4vw,22px); font-weight:600; color:var(--purple-800); padding:12px 16px; border-radius:12px; transition: background var(--transition)
+    }
+    .nav__link:hover{background:rgba(122,60,255,.08)}
+    .nav__social{display:flex; gap:12px; justify-content:center; margin-top:16px; color:var(--purple-700)}
+    /* Hero */
+    .hero {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;    /* keeps slideshow landscape */
+  min-height: 400px;       /* fallback for small screens */
+  max-height: 80vh;        /* prevents it from being too tall */
+  overflow: hidden;
+}
+    .hero__slides, .hero__slides::before{
+      position:absolute; inset:0; background-size:cover; background-position:center; transition: opacity 1s ease;
+    }
+    .hero__slides::before{
+      content:""; background:rgba(0,0,0,.45);
+    }
+    .hero__slide{position:absolute; inset:0; opacity:0; background-size:cover; background-position:center; transition:opacity 1s ease}
+    .hero__slide.is-active{opacity:1}
+    .hero__content{
+      position:relative; z-index:1; height:100%; display:grid; place-items:center; text-align:center; color:#fff; padding:0 18px;
+    }
+    .hero__title{
+      font-family:"Playfair Display",serif; font-weight:700; font-size:clamp(28px,5vw,56px);
+      letter-spacing:.3px;
+    }
+    .hero__title .ink{background:var(--grad-2); -webkit-background-clip:text; background-clip:text; color:transparent}
+    .hero__sub{font-size:clamp(14px,2.2vw,20px); color:#f5efff; max-width:800px; margin:12px auto 24px}
+    .hero__chev {
+  margin-top: 12px; /* space after button */
+  text-align: center;
+  color: #ffffffcc;
+  font-size: 22px;
+  animation: bob 1.8s infinite;
+}
+    @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+    /* Sections */
+    section{padding:64px 18px}
+    .container{max-width:1200px; margin:0 auto}
+    .eyebrow{font-size:12px; letter-spacing:.24em; text-transform:uppercase; color:var(--purple-600); font-weight:700}
+    .h2{font-family:"Playfair Display",serif; font-size:clamp(22px,3.6vw,36px); margin:10px 0 14px}
+    .lead{color:var(--muted); font-size:clamp(14px,2vw,18px)}
+    .btn{
+      display:inline-flex; align-items:center; gap:10px; padding:12px 18px; border-radius:999px; color:#fff; background:var(--grad-2); box-shadow:0 8px 18px rgba(122,60,255,.25); font-weight:600; transition: transform var(--transition), box-shadow var(--transition)
+    }
+    .btn:hover{transform:translateY(-2px); box-shadow:0 12px 24px rgba(122,60,255,.35)}
+    .btn:focus-visible{outline:3px solid var(--purple-300); outline-offset:3px}
+    /* Intro */
+    .intro{text-align:center}
+    .intro .lead{max-width:900px; margin:0 auto 22px}
+    /* Full pictures */
+    .full-pic{padding:0}
+    .full-pic .pic{
+      height:56vh; min-height:360px; background-size:cover; background-position:center; position:relative; isolation:isolate;
+    }
+    .full-pic .pic::after{content:""; position:absolute; inset:0; background:linear-gradient(to bottom, rgba(0,0,0,.25), rgba(0,0,0,.0) 40%, rgba(0,0,0,.25))}
+    /* About */
+    .grid-2{display:grid; gap:24px}
+    @media (min-width:900px){.grid-2{grid-template-columns:1.2fr 1fr}}
+    .panel{background:var(--white); border:1px solid rgba(122,60,255,.12); border-radius:var(--radius); padding:24px; box-shadow:var(--shadow)}
+    /* Services */
+    .services{background:linear-gradient(180deg, #faf7ff, #ffffff)}
+    .cards{display:grid; gap:18px}
+    @media (min-width:800px){.cards{grid-template-columns:repeat(4,1fr)}}
+    .card{
+      background:rgba(255,255,255,.92);
+      border:1px solid rgba(122,60,255,.1);
+      border-radius:14px; padding:20px; transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .card:hover{transform:translateY(-4px); box-shadow:0 16px 28px rgba(122,60,255,.15)}
+    .card i{font-size:22px; color:var(--purple-600)}
+    .card .title{font-weight:700; margin:10px 0 6px}
+    .card .text{color:var(--muted); font-size:14px}
+    /* Why Lapelle */
+    .why{background:radial-gradient(600px 300px at 80% 0%, #f2eaff, #fff)}
+    .why__grid{display:grid; gap:16px}
+    @media (min-width:900px){.why__grid{grid-template-columns:repeat(3,1fr)}}
+    .why__item{
+      padding:18px; border:1px dashed rgba(122,60,255,.28); border-radius:14px; background:#fff;
+    }
+    .why__item .k{font-weight:700}
+    /* Team */
+    .team__grid{display:grid; gap:18px}
+    @media (min-width:1000px){.team__grid{grid-template-columns:repeat(4,1fr)}}
+    .team__card{background:#fff; border:1px solid rgba(122,60,255,.12); border-radius:14px; overflow:hidden; box-shadow:var(--shadow)}
+    .team__meta{padding:16px}
+    .team__role{color:var(--purple-700); font-weight:600; font-size:14px}
+    .team__bio{color:var(--muted); font-size:14px}
+    .avatar {
+  aspect-ratio: 4/3;
+  background:linear-gradient(135deg,#f1e9ff,#ffffff);
+  overflow:hidden;   /* keeps img inside */
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;  /* crop instead of squish */
+  border-radius: 0;   /* remove circle */
+  display: block;
+}
+    /* Testimonials */
+    .testimonials{background:linear-gradient(180deg,#faf7ff,#fff)}
+    .ts__wrap{position:relative}
+    .ts__viewport{overflow:hidden}
+    .ts__track{display:flex; transition: transform .45s ease}
+    .ts__item{
+      min-width:100%; padding:22px; 
+    }
+    .ts__card{
+      background:#fff; border:1px solid rgba(122,60,255,.12); border-radius:16px; padding:22px; box-shadow:var(--shadow)
+    }
+    .ts__nav{
+      position:absolute; inset-block:0; width:100%; display:flex; align-items:center; justify-content:space-between; pointer-events:none;
+    }
+    .ts__btn{
+      pointer-events:auto; background:#fff; border:1px solid rgba(122,60,255,.22); width:40px; height:40px; border-radius:50%; display:grid; place-items:center; color:var(--purple-700); box-shadow:var(--shadow)
+    }
+    .ts__dots{display:flex; gap:8px; justify-content:center; margin-top:16px}
+    .ts__dot{width:8px; height:8px; border-radius:50%; background:#d9ccff; transition: transform var(--transition), background var(--transition)}
+    .ts__dot.is-active{background:var(--purple-600); transform:scale(1.2)}
+    /* Clients */
+   .clients__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;                 /* more spacing between logos */
+  max-width: 600px;          /* control total width of the grid */
+  margin: 0 auto;            /* center the grid horizontally */
+  justify-items: center;     /* center each logo in its grid cell */
+}
+
+.client {
+  width: 100%;               /* fill available cell width */
+  aspect-ratio: 1 / 1;       /* make logos more square and bigger */
+  min-height: 150px;         /* ensures enough height */
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(122,60,255,.16);
+  border-radius: 12px;
+  background: #fff;
+  font-weight: 600;
+}
+
+.client img {
+  max-width: 80%;            /* keep logos scaled nicely */
+  max-height: 80%;
+  object-fit: contain;
+}
+    /* Footer */
+    footer{background:#120a20; color:#ddd}
+    .footer__grid{display:grid; gap:24px}
+    @media (min-width:900px){.footer__grid{grid-template-columns:2fr 1fr 1fr}}
+    .footer__title{font-weight:700; color:#fff; margin-bottom:10px}
+    .footer__social{display:flex; gap:10px}
+    .copy {
+  text-align:center;
+  margin-top:24px;
+  padding-top:16px;
+  font-size:13px;
+  color:#bdb3d7;
+  border-top:1px solid rgba(255,255,255,.08);
+}
+    /* Reveal on scroll */
+    .reveal{opacity:0; transform: translateY(18px); transition: opacity .6s ease, transform .6s ease}
+    .reveal.is-visible{opacity:1; transform: translateY(0)}
+    /* Reduced motion */
+    @media (prefers-reduced-motion:reduce){
+      *{animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important}
+    }
+
+    /* Form styles */
+    .form-section {
+      padding: 80px 18px;
+      background: linear-gradient(180deg, #faf7ff, #ffffff);
+    }
+    .form-wrap {
+      max-width: 700px;
+      margin: 0 auto;
+      background: #fff;
+      border: 1px solid rgba(122,60,255,.12);
+      border-radius: var(--radius);
+      padding: 32px;
+      box-shadow: var(--shadow);
+    }
+    .form-wrap h2 {
+      font-family: "Playfair Display", serif;
+      font-size: clamp(22px, 3.2vw, 32px);
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    .form-grid {
+      display: grid;
+      gap: 18px;
+      margin-top: 22px;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+    .form-group label {
+      font-weight: 600;
+      font-size: 14px;
+      margin-bottom: 6px;
+      color: var(--purple-700);
+    }
+/* Custom select styling */
+.form-group select {
+  appearance: none;             /* remove native dropdown */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  border: 1px solid rgba(122,60,255,.22);
+  border-radius: var(--radius-sm);
+  padding: 12px 40px 12px 14px; /* extra space for custom arrow */
+  font-size: 15px;
+  font-family: inherit;
+  background: #fff url("data:image/svg+xml;utf8,<svg fill='%237a3cff' height='24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>") no-repeat right 12px center;
+  background-size: 16px;
+  cursor: pointer;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+.btn-spinner {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.form-group select:focus {
+  border-color: var(--purple-500);
+  box-shadow: 0 0 0 3px rgba(122,60,255,.15);
+  outline: none;
+}
+
+.form-group select option {
+  padding: 10px;
+}
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      border: 1px solid rgba(122,60,255,.22);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      font-size: 15px;
+      font-family: inherit;
+      resize: vertical;
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: var(--purple-500);
+      box-shadow: 0 0 0 3px rgba(122,60,255,.15);
+      outline: none;
+    }
+    .form-group textarea {
+      min-height: 120px;
+    }
+    .form-actions {
+      text-align: center;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Loader -->
+  <div class="loader"><div class="loader__wrap"><img src="logo.png" alt="Lapelle Events logo" class="loader__logo" /></div></div>
+
+<!-- Menu Overlay -->
+  <nav class="nav" id="nav" aria-hidden="true">
+    <div class="nav__panel container">
+      <div class="nav__grid">
+        <a class="nav__link" href="#home">.</a>
+        <a class="nav__link" href="index.html">Home</a>
+        <a class="nav__link" href="about.html">About</a>
+        <a class="nav__link" href="enquiry.html">Enquiry</a>
+        <a class="nav__link" href="gallery.html">Gallery</a>
+      <a class="nav__link" href="contact.html">Contact</a>
+      </div>
+      <div class="nav__social" aria-label="Social links">
+        <a href="https://wa.me/2348023394254?text=I%20would%20like%20to%20make%20enquiry%20about%20__" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+        <a href="https://www.instagram.com/lapelleevents?igsh=MXc2cXk4M2p4eXIzeQ==" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+        <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook"></i></a>
+        <a href="#" aria-label="X / Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Header -->
+  <header class="header container">
+    <button class="header__btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="nav">
+      <span class="burger" id="burger"><span></span></span>
+    </button>
+    <div class="logo"><img src="logo.png" alt="Lapelle Events logo" /></div>
+    <div class="header__cta">
+      <a href="https://wa.me/2348023394254" aria-label="Chat on WhatsApp"><i class="fa-brands fa-whatsapp fa-lg"></i></a>
+    </div>
+  </header>
+
+  <!-- Enquiry Form -->
+  <section class="form-section reveal">
+    <div class="form-wrap">
+      <h2>Tell us about your event</h2>
+      <form action="https://formspree.io/f/mqadzbrq" method="POST" class="form-grid">
+        <div class="form-group">
+          <label for="fullName">Full Name</label>
+          <input type="text" id="fullName" name="Full Name" required />
+        </div>
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" name="Phone" required />
+        </div>
+        <div class="form-group">
+          <label for="location">Location</label>
+          <input type="text" id="location" name="Location" required />
+        </div>
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="Email" required />
+        </div>
+        <div class="form-group">
+          <label for="eventDate">Event Date</label>
+          <input type="date" id="eventDate" name="Event Date" required />
+        </div>
+        <div class="form-group">
+          <label for="eventLocation">Event Location</label>
+          <input type="text" id="eventLocation" name="Event Location" required />
+        </div>
+        <div class="form-group">
+          <label for="guestSize">Guest Size</label>
+          <input type="number" id="guestSize" name="Guest Size" min="1" required />
+        </div>
+        <div class="form-group">
+          <label for="eventType">Event Type</label>
+          <select id="eventType" name="Event Type" required>
+            <option value="">Select one</option>
+            <option>Wedding</option>
+            <option>Social Event</option>
+            <option>Corporate Event</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="message">Tell us more</label>
+          <textarea id="message" name="Message" placeholder="Share additional details..."></textarea>
+        </div>
+       <!-- Form Submit Button -->
+<div class="form-actions">
+  <button type="submit" class="btn" id="submitBtn">
+    <span class="btn-text"><i class="fa-solid fa-paper-plane"></i> Submit Enquiry</span>
+    <span class="btn-spinner" style="display:none;">
+      <i class="fa-solid fa-spinner fa-spin"></i> Sending...
+    </span>
+  </button>
+</div>
+      </form>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer id="contact">
+    <div class="container" style="padding:38px 18px">
+      <div class="footer__grid">
+        <div>
+          <div class="footer__title">Contact Us</div>
+          <p>
+            <strong>Address:</strong> 11A, Oroleye Crescent, Off Salvation Bus-stop, Opebi, Lagos<br/>
+            <strong>Telephone:</strong> <a href="tel:+2348188630237">+2348188630237</a>, <a href="tel:+2348023394254">+2348023394254</a><br/>
+            <strong>Email:</strong> <a href="mailto:lapelle.events@gmail.com">lapelle.events@gmail.com</a>
+          </p>
+        </div>
+        <div>
+          <div class="footer__title">Quick Links</div>
+          <ul style="margin:0; padding-left:18px">
+            <li><a href="index.html#services">Services</a></li>
+            <li><a href="index.html#why">Why Lapelle</a></li>
+            <li><a href="index.html#team">Team</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="copy">© 2025 Lapelle Events - All rights reserved</div>
+    </div>
+  </footer>
+
+  <!-- Scripts (reuse from index) -->
+  <script>
+    (function(){
+      const ld=document.querySelector('.loader');
+      const hide=()=>ld&&ld.classList.add('loader--hide');
+      setTimeout(hide,1000);
+    })();
+    (function(){
+      const nav=document.getElementById('nav');
+      const btn=document.getElementById('menuBtn');
+      const burger=document.getElementById('burger');
+      const toggle=(force)=>{
+        const open=force??!nav.classList.contains('is-open');
+        nav.classList.toggle('is-open',open);
+        burger.classList.toggle('is-open',open);
+        btn.setAttribute('aria-expanded',String(open));
+        nav.setAttribute('aria-hidden',String(!open));
+        document.body.style.overflow=open?'hidden':'';
+      };
+      btn.addEventListener('click',()=>toggle());
+      nav.addEventListener('click',(e)=>{if(e.target.id==='nav')toggle(false)});
+      document.querySelectorAll('.nav__link').forEach(a=>a.addEventListener('click',()=>toggle(false)));
+      document.addEventListener('keydown',(e)=>{if(e.key==='Escape')toggle(false)});
+    })();
+    (function(){
+      const obs=new IntersectionObserver((entries)=>{
+        entries.forEach(e=>{
+          if(e.isIntersecting){e.target.classList.add('is-visible');obs.unobserve(e.target);}
+        });
+      },{threshold:.15});
+      document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+    })();
+  </script>
+<script>
+(function(){
+  const form = document.querySelector("form");
+  const btn = document.getElementById("submitBtn");
+  const text = btn.querySelector(".btn-text");
+  const spinner = btn.querySelector(".btn-spinner");
+
+  form.addEventListener("submit", function(){
+    // disable & show spinner
+    btn.disabled = true;
+    text.style.display = "none";
+    spinner.style.display = "inline-flex";
+
+    // Auto-reset after 3s (for UX demo),
+    // Formspree will also redirect afterwards
+    setTimeout(()=>{
+      btn.disabled = false;
+      text.style.display = "inline-flex";
+      spinner.style.display = "none";
+    }, 3000);
+  });
+})();
+</script>
+</body>
+</html>

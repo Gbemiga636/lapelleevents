@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- /gallery.html — Lapelle Events (single-file HTML+CSS+JS) -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gallery — Lapelle Events</title>
+  <meta name="description" content="A curated gallery of Lapelle Events’ moments — corporate, social, launches, and more." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" integrity="sha512-cx..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    :root{
+      --purple-50:#f5edff;
+      --purple-100:#e5d6ff;
+      --purple-200:#cdb3ff;
+      --purple-300:#b28cff;
+      --purple-400:#9966ff;
+      --purple-500:#7a3cff;
+      --purple-600:#652ee6;
+      --purple-700:#5226be;
+      --purple-800:#3e1f93;
+      --purple-900:#2c186b;
+      --white:#ffffff;
+      --black:#0e0b14;
+      --text:#1b132b;
+      --muted:#6d5f80;
+      --grad-1: linear-gradient(135deg, #a770ef 0%, #cf8bf3 35%, #fdb99b 100%);
+      --grad-2: linear-gradient(135deg, #7a3cff 0%, #ff68d7 50%, #a1a9ff 100%);
+      --grad-ink: linear-gradient(90deg, #7a3cff, #cf8bf3 60%, #a1a9ff);
+      --glass: rgba(255,255,255,0.10);
+      --shadow: 0 10px 30px rgba(60, 20, 100, .2);
+      --radius: 16px;
+      --radius-sm: 10px;
+      --transition: 200ms ease;
+      --header-h: 64px;
+    }
+    *,*::before,*::after{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,Arial,Helvetica,sans-serif;
+      color:var(--text);
+      background:var(--white);
+      line-height:1.6;
+      -webkit-font-smoothing:antialiased;
+      text-rendering:optimizeLegibility;
+      scroll-behavior:smooth;
+    }
+    a{color:inherit;text-decoration:none}
+    img{max-width:100%;display:block}
+
+    /* Loader */
+    .loader{
+      position:fixed;inset:0;z-index:9999;background:radial-gradient(1200px 600px at 20% 10%, #f3e9ff, #f6f0ff 30%, #ffffff 75%);
+      display:grid;place-items:center;overflow:hidden;
+    }
+    .loader__wrap {
+      position: relative;
+      width: min(340px, 90vw);
+      height: 220px;
+      border-radius: var(--radius);
+      background: var(--glass);
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(122,60,255,.15);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+    .loader__logo {
+      width: 180px;
+      position: relative;
+      transform-origin: center;
+      animation:
+        slideIn 0.8s ease-out forwards,
+        spin 1.2s linear 0.8s infinite;
+    }
+    @keyframes slideIn {
+      from { transform: translateY(-150%) scale(0.8); opacity: 0; }
+      to   { transform: translateY(0) scale(1); opacity: 1; }
+    }
+    @keyframes spin {
+      0%   { transform: translateY(0) rotate(0deg) scale(1); }
+      50%  { transform: translateY(0) rotate(180deg) scale(1.2); }
+      100% { transform: translateY(0) rotate(360deg) scale(1); }
+    }
+    .loader--hide{animation: fadeOut .7s ease forwards}
+    @keyframes fadeOut{to{opacity:0; visibility:hidden}}
+
+    /* Header */
+    .header{
+      position:sticky; top:0; z-index:1000; height:var(--header-h);
+      display:grid; grid-template-columns:48px 1fr 48px; align-items:center;
+      background:rgba(255,255,255,.85); backdrop-filter:saturate(1.2) blur(10px);
+      border-bottom:1px solid rgba(122,60,255,.08)
+    }
+    .header__btn{display:grid; place-items:center; height:48px; width:48px; cursor:pointer}
+    .burger{position:relative; width:22px; height:14px}
+    .burger span, .burger::before, .burger::after{
+      content:""; position:absolute; left:0; right:0; height:2px; background:var(--purple-700); transition: transform .25s ease, opacity .25s ease, top .25s ease;
+    }
+    .burger span{top:6px}
+    .burger::before{top:0}
+    .burger::after{top:12px}
+    .burger.is-open span{opacity:0}
+    .burger.is-open::before{top:6px; transform:rotate(45deg)}
+    .burger.is-open::after{top:6px; transform:rotate(-45deg)}
+
+    .logo{justify-self:center; display:flex; align-items:center; justify-content:center}
+    .logo img{max-height:80px; width:auto}
+    .header__cta{justify-self:end; color:#25D366}
+    .header__cta a{display:grid; place-items:center; height:48px; width:48px}
+    .header__cta a:focus-visible{outline:3px solid var(--purple-400); outline-offset:2px; border-radius:8px}
+
+    /* Menu Overlay */
+    .nav{
+      position:fixed; inset:0; z-index:999; background:rgba(22,9,34,.72); backdrop-filter: blur(8px); transform: translateY(-100%); transition: transform .28s ease;
+    }
+    .nav.is-open{transform: translateY(0)}
+    .nav__panel{
+      max-width:900px; margin:calc(var(--header-h) + 16px) auto; background:rgba(255,255,255,.92); border-radius:24px; box-shadow:var(--shadow); padding:28px;
+    }
+    .nav__grid{display:grid; gap:16px; grid-template-columns:1fr; text-align:center}
+    .nav__link{
+      font-size:clamp(18px,2.4vw,22px); font-weight:600; color:var(--purple-800); padding:12px 16px; border-radius:12px; transition: background var(--transition)
+    }
+    .nav__link:hover{background:rgba(122,60,255,.08)}
+    .nav__social{display:flex; gap:12px; justify-content:center; margin-top:16px; color:var(--purple-700)}
+
+    /* Section */
+    section{padding:64px 18px}
+    .container{max-width:1200px; margin:0 auto}
+    .eyebrow{font-size:12px; letter-spacing:.24em; text-transform:uppercase; color:var(--purple-600); font-weight:700}
+    .h2{font-family:"Playfair Display",serif; font-size:clamp(22px,3.6vw,36px); margin:10px 0 14px}
+    .lead{color:var(--muted); font-size:clamp(14px,2vw,18px)}
+
+    /* Gallery */
+    .gallery__intro{text-align:center}
+    .gallery__intro .lead{max-width:900px; margin:0 auto 22px}
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fill, minmax(220px, 1fr));
+      gap:16px;
+    }
+    .tile{
+      position:relative;
+      background:#fff;
+      border:1px solid rgba(122,60,255,.12);
+      border-radius:14px;
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+      transition: transform var(--transition), box-shadow var(--transition);
+      isolation:isolate;
+    }
+    .tile:hover{transform:translateY(-3px); box-shadow:0 16px 28px rgba(122,60,255,.15)}
+    .frame{
+      position:relative;
+      aspect-ratio: 4/5; /* portrait-ish like IG; videos adapt */
+      background:linear-gradient(135deg,#f6f0ff,#ffffff);
+      overflow:hidden;
+    }
+    .frame img,
+    .frame video{
+      width:100%; height:100%; object-fit:cover; display:block;
+    }
+    .wm{
+      position:absolute; right:10px; bottom:10px; z-index:2;
+      font-weight:800; font-size:14px; letter-spacing:.08em;
+      padding:4px 8px; border-radius:999px;
+      background:rgba(255,255,255,.55); border:1px solid rgba(122,60,255,.22);
+      backdrop-filter: blur(4px);
+      color:var(--purple-800);
+      user-select:none; pointer-events:none;
+    }
+    .cap{
+      padding:12px 12px 14px; font-size:14px; color:var(--muted);
+      border-top:1px solid rgba(122,60,255,.08);
+      background:#fff;
+    }
+
+    /* Video controls + spinner */
+    .v-ctrls{
+      position:absolute; inset:0; display:grid; place-items:center; z-index:3; pointer-events:none;
+    }
+    .v-btn{
+      pointer-events:auto;
+      display:inline-grid; place-items:center;
+      width:52px; height:52px; border-radius:50%;
+      color:#fff; background:var(--grad-2); box-shadow:0 10px 20px rgba(122,60,255,.35);
+      border:1px solid rgba(255,255,255,.4);
+      transform:scale(1); transition:transform var(--transition), opacity var(--transition);
+    }
+    .v-btn:focus-visible{outline:3px solid var(--purple-300); outline-offset:3px}
+    .v-btn.is-hidden{opacity:0; transform:scale(.9);}
+    .spinner{
+      position:absolute; right:10px; top:10px; width:26px; height:26px; border-radius:50%;
+      border:3px solid rgba(255,255,255,.6); border-top-color:#7a3cff; animation:spin2 .8s linear infinite; z-index:3;
+      background:rgba(0,0,0,.2); backdrop-filter: blur(3px);
+      opacity:0; transition:opacity var(--transition);
+    }
+    @keyframes spin2{to{transform:rotate(360deg)}}
+    .spinner.is-on{opacity:1}
+
+    /* Footer */
+    footer{background:#120a20; color:#ddd}
+    .footer__grid{display:grid; gap:24px}
+    @media (min-width:900px){.footer__grid{grid-template-columns:2fr 1fr 1fr}}
+    .footer__title{font-weight:700; color:#fff; margin-bottom:10px}
+    .footer__social{display:flex; gap:10px}
+    .copy{
+      text-align:center; margin-top:24px; padding-top:16px; font-size:13px; color:#bdb3d7;
+      border-top:1px solid rgba(255,255,255,.08)
+    }
+
+    /* Reveal on scroll */
+    .reveal{opacity:0; transform: translateY(18px); transition: opacity .6s ease, transform .6s ease}
+    .reveal.is-visible{opacity:1; transform: translateY(0)}
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion:reduce){
+      *{animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important}
+    }
+  </style>
+</head>
+<body>
+  <!-- Loader -->
+  <div class="loader" role="status" aria-live="polite">
+    <div class="loader__wrap">
+      <img src="logo.png" alt="Lapelle Events logo" class="loader__logo" />
+    </div>
+  </div>
+
+  <!-- Menu Overlay -->
+  <nav class="nav" id="nav" aria-hidden="true">
+    <div class="nav__panel container">
+      <div class="nav__grid">
+        <a class="nav__link" href="#home">.</a>
+        <a class="nav__link" href="index.html">Home</a>
+        <a class="nav__link" href="about.html">About</a>
+        <a class="nav__link" href="enquiry.html">Enquiry</a>
+        <a class="nav__link" href="gallery.html" aria-current="page">Gallery</a>
+        <a class="nav__link" href="contact.html">Contact</a>
+      </div>
+      <div class="nav__social" aria-label="Social links">
+        <a href="https://wa.me/2348023394254?text=I%20would%20like%20to%20make%20enquiry%20about%20__" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+        <a href="https://www.instagram.com/lapelleevents?igsh=MXc2cXk4M2p4eXIzeQ==" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+        <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook"></i></a>
+        <a href="#" aria-label="X / Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Header -->
+  <header class="header container" id="home">
+    <button class="header__btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="nav">
+      <span class="burger" id="burger"><span></span></span>
+    </button>
+    <div class="logo">
+      <img src="logo.png" alt="Lapelle Events logo" />
+    </div>
+    <div class="header__cta">
+      <a href="https://wa.me/2348023394254?text=I%20would%20like%20to%20make%20enquiry%20about%20__" aria-label="Chat on WhatsApp">
+        <i class="fa-brands fa-whatsapp fa-lg"></i>
+      </a>
+    </div>
+  </header>
+
+  <!-- Intro -->
+  <section class="gallery__intro reveal">
+    <div class="container">
+      <div class="eyebrow">Our Work</div>
+      <h1 class="h2">Gallery — Moments, Crafted with Care</h1>
+      <p class="lead">A scroll through ceremonies, launches, conferences, and all‑round beautiful days. Every frame carries our initials — every detail carries our heart.</p>
+    </div>
+  </section>
+
+  <!-- Gallery Grid -->
+ <section>
+    <div class="container">
+      <div class="grid" id="galleryGrid" aria-label="Lapelle Events media gallery">
+        <!-- IMAGE -->
+        <figure class="tile">
+          <div class="frame">
+            <img src="g1.jpeg" loading="lazy" alt="Table styling with soft lilac florals" />
+            <span class="wm" aria-hidden="true">LE</span>
+          </div>
+          <figcaption class="cap">Great events feel effortless because details work hard.</figcaption>
+        </figure>
+
+        <!-- VIDEO -->
+        <figure class="tile">
+          <div class="frame v-frame" data-caption="Timing turns plans into magic.">
+            <video class="v" playsinline muted preload="none" poster="v1-poster.jpeg"></video>
+            <span class="wm" aria-hidden="true">LE</span>
+            <div class="v-ctrls">
+              <button class="v-btn" aria-label="Play video"><i class="fa-solid fa-play"></i></button>
+            </div>
+            <div class="spinner" aria-hidden="true"></div>
+          </div>
+          <figcaption class="cap">Timing turns plans into magic.</figcaption>
+          <!-- lazy source -->
+          <template class="v-src">
+            <source data-src="v1.mp4" type="video/mp4">
+            <source data-src="v1.webm" type="video/webm">
+          </template>
+        </figure>
+
+        <!-- IMAGE -->
+        <figure class="tile">
+          <div class="frame">
+            <img src="g2.jpeg" loading="lazy" alt="Corporate stage with dynamic lighting" />
+            <span class="wm" aria-hidden="true">LE</span>
+          </div>
+          <figcaption class="cap">Clarity on stage, calm behind it.</figcaption>
+        </figure>
+
+        <!-- VIDEO -->
+        <figure class="tile">
+          <div class="frame v-frame" data-caption="A plan is love made visible to your guests.">
+            <video class="v" playsinline muted preload="none" poster="v2-poster.jpeg"></video>
+            <span class="wm" aria-hidden="true">LE</span>
+            <div class="v-ctrls">
+              <button class="v-btn" aria-label="Play video"><i class="fa-solid fa-play"></i></button>
+            </div>
+            <div class="spinner" aria-hidden="true"></div>
+          </div>
+          <figcaption class="cap">A plan is love made visible to your guests.</figcaption>
+          <template class="v-src">
+            <source data-src="v2.mp4" type="video/mp4">
+            <source data-src="v2.webm" type="video/webm">
+          </template>
+        </figure>
+
+        <!-- IMAGE -->
+        <figure class="tile">
+          <div class="frame">
+            <img src="g3.jpeg" loading="lazy" alt="Minimal seating with name cards" />
+            <span class="wm" aria-hidden="true">LE</span>
+          </div>
+          <figcaption class="cap">Every seat tells someone, “You belong here.”</figcaption>
+        </figure>
+
+        <!-- IMAGE -->
+        <figure class="tile">
+          <div class="frame">
+            <img src="g4.jpeg" loading="lazy" alt="Product launch floor with brand accents" />
+            <span class="wm" aria-hidden="true">LE</span>
+          </div>
+          <figcaption class="cap">Brands meet people best in well‑told moments.</figcaption>
+        </figure>
+
+        <!-- VIDEO -->
+        <figure class="tile">
+          <div class="frame v-frame" data-caption="Rehearsals are where confidence is built.">
+            <video class="v" playsinline muted preload="none" poster="v3-poster.jpeg"></video>
+            <span class="wm" aria-hidden="true">LE</span>
+            <div class="v-ctrls">
+              <button class="v-btn" aria-label="Play video"><i class="fa-solid fa-play"></i></button>
+            </div>
+            <div class="spinner" aria-hidden="true"></div>
+          </div>
+          <figcaption class="cap">Rehearsals are where confidence is built.</figcaption>
+          <template class="v-src">
+            <source data-src="v3.mp4" type="video/mp4">
+            <source data-src="v3.webm" type="video/webm">
+          </template>
+        </figure>
+
+        <!-- IMAGE -->
+        <figure class="tile">
+          <div class="frame">
+            <img src="g5.jpeg" loading="lazy" alt="Elegant stage backdrop and lectern" />
+            <span class="wm" aria-hidden="true">LE</span>
+          </div>
+          <figcaption class="cap">Good design whispers; the message speaks.</figcaption>
+        </figure>
+
+        <!-- IMAGE -->
+        <figure class="tile">
+          <div class="frame">
+            <img src="g6.jpeg" loading="lazy" alt="Warm wedding lighting with floral arch" />
+            <span class="wm" aria-hidden="true">LE</span>
+          </div>
+          <figcaption class="cap">Romance is logistics in soft lighting.</figcaption>
+        </figure>
+
+        <!-- VIDEO -->
+        <figure class="tile">
+          <div class="frame v-frame" data-caption="A smooth run‑of‑show is quiet excellence.">
+            <video class="v" playsinline muted preload="none" poster="v4-poster.jpeg"></video>
+            <span class="wm" aria-hidden="true">LE</span>
+            <div class="v-ctrls">
+              <button class="v-btn" aria-label="Play video"><i class="fa-solid fa-play"></i></button>
+            </div>
+            <div class="spinner" aria-hidden="true"></div>
+          </div>
+          <figcaption class="cap">A smooth run‑of‑show is quiet excellence.</figcaption>
+          <template class="v-src">
+            <source data-src="v4.mp4" type="video/mp4">
+            <source data-src="v4.webm" type="video/webm">
+          </template>
+        </figure>
+
+        <!-- IMAGE -->
+        <figure class="tile">
+          <div class="frame">
+            <img src="g7.jpeg" loading="lazy" alt="VIP seating cordoned with subtle branding" />
+            <span class="wm" aria-hidden="true">LE</span>
+          </div>
+          <figcaption class="cap">Protocols done right feel like kindness.</figcaption>
+        </figure>
+
+        <!-- IMAGE -->
+        <figure class="tile">
+          <div class="frame">
+            <img src="g8.jpeg" loading="lazy" alt="Conference networking lounge styling" />
+            <span class="wm" aria-hidden="true">LE</span>
+          </div>
+          <figcaption class="cap">Design invites connection before words do.</figcaption>
+        </figure>
+
+        <!-- IMAGE -->
+        <figure class="tile">
+          <div class="frame">
+            <img src="g9.jpeg" loading="lazy" alt="Table styling with soft lilac florals" />
+            <span class="wm" aria-hidden="true">LE</span>
+          </div>
+          <figcaption class="cap">Every detail tells a story — let us help you write yours..</figcaption>
+        </figure>
+
+<!-- IMAGE -->
+        <figure class="tile">
+          <div class="frame">
+            <img src="g11.jpeg" loading="lazy" alt="Table styling with soft lilac florals" />
+            <span class="wm" aria-hidden="true">LE</span>
+          </div>
+          <figcaption class="cap">Moments fade, but memories last forever. We create the ones you’ll never forget.</figcaption>
+        </figure>
+
+<!-- IMAGE -->
+        <figure class="tile">
+          <div class="frame">
+            <img src="g12.jpeg" loading="lazy" alt="Table styling with soft lilac florals" />
+            <span class="wm" aria-hidden="true">LE</span>
+          </div>
+          <figcaption class="cap">Your dreams deserve more than a plan — they deserve an experience..</figcaption>
+        </figure>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer id="contact">
+    <div class="container" style="padding:38px 18px">
+      <div class="footer__grid">
+        <div>
+          <div class="footer__title">Contact Us</div>
+          <p>
+            <strong>Address:</strong> 11A, Oroleye Crescent, Off Salvation Bus-stop, Opebi, Lagos, Nigeria.<br/>
+            <strong>Telephone:</strong> <a href="tel:+2348188630237">+234-818-863-0237</a>, <a href="tel:+2348023394254">+234-802-339-4254</a><br/>
+            <strong>Email:</strong> <a href="mailto:lapelle.events@gmail.com">lapelle.events@gmail.com</a>, <a href="mailto:lapelle2g@yahoo.com">lapelle2g@yahoo.com</a>
+          </p>
+          <div class="footer__social">
+            <a href="https://wa.me/2348023394254?text=I%20would%20like%20to%20make%20enquiry%20about%20__" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+            <a href="https://www.instagram.com/lapelleevents?igsh=MXc2cXk4M2p4eXIzeQ==" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook"></i></a>
+            <a href="#" aria-label="X / Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+            <a href="mailto:lapelle.events@gmail.com" aria-label="Email"><i class="fa-solid fa-envelope"></i></a>
+          </div>
+        </div>
+        <div>
+          <div class="footer__title">Quick Links</div>
+          <ul style="margin:0; padding-left:18px">
+            <li><a href="index.html#services">Services</a></li>
+            <li><a href="index.html#why">Why Lapelle</a></li>
+            <li><a href="index.html#team">Team</a></li>
+            <li><a href="enquiry.html">Enquiry</a></li>
+          </ul>
+        </div>
+        <div></div>
+      </div>
+      <div class="copy">
+        <span>© 2025 Lapelle Events - All rights reserved</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+  /* Loader hide logic (why: ensure quick exit even if resources stall) */
+  (function(){
+  const ld = document.querySelector('.loader');
+  if(!ld) return;
+
+  let loaded = false;
+  let minTime = false;
+
+  const hide = () => {
+    if(loaded && minTime) ld.classList.add('loader--hide');
+  };
+
+  // Ensure at least 2 seconds visible
+  setTimeout(()=>{
+    minTime = true;
+    hide();
+  }, 1000);
+
+  // Hide after everything is loaded
+  window.addEventListener('load', ()=>{
+    loaded = true;
+    hide();
+  }, {once:true});
+})();
+
+  /* Menu toggle + accessibility */
+  (function(){
+    const nav = document.getElementById('nav');
+    const btn = document.getElementById('menuBtn');
+    const burger = document.getElementById('burger');
+    const toggle = (force) => {
+      const open = force ?? !nav.classList.contains('is-open');
+      nav.classList.toggle('is-open', open);
+      burger.classList.toggle('is-open', open);
+      btn.setAttribute('aria-expanded', String(open));
+      nav.setAttribute('aria-hidden', String(!open));
+      document.body.style.overflow = open ? 'hidden':'';
+    };
+    btn.addEventListener('click', ()=>toggle());
+    nav.addEventListener('click', (e)=>{ if(e.target.id==='nav') toggle(false) });
+    document.querySelectorAll('.nav__link').forEach(a=>a.addEventListener('click', ()=>toggle(false)));
+    document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') toggle(false) });
+  })();
+
+  /* Reveal on scroll */
+  (function(){
+    const obs = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting){ e.target.classList.add('is-visible'); obs.unobserve(e.target); }
+      });
+    }, {threshold: .15});
+    document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+  })();
+
+  /* Gallery videos: lazy sources, custom controls, spinner */
+  (function(){
+    const frames = Array.from(document.querySelectorAll('.v-frame'));
+
+    const attachSources = (frame) => {
+      const t = frame.parentElement.querySelector('.v-src');
+      if(!t) return;
+      const video = frame.querySelector('video');
+      if(video.dataset.loaded) return;
+      t.content.querySelectorAll('source').forEach(s=>{
+        const src = s.getAttribute('data-src');
+        if(src) {
+          const clone = s.cloneNode();
+          clone.removeAttribute('data-src');
+          clone.src = src;
+          video.appendChild(clone);
+        }
+      });
+      video.dataset.loaded = '1';
+      video.load();
+    };
+
+    const setSpinner = (frame, on) => {
+      const sp = frame.querySelector('.spinner');
+      sp && sp.classList.toggle('is-on', !!on);
+    };
+
+    const setBtnIcon = (btn, playing) => {
+      btn.innerHTML = playing
+        ? '<i class="fa-solid fa-pause"></i>'
+        : '<i class="fa-solid fa-play"></i>';
+      btn.setAttribute('aria-label', playing ? 'Pause video' : 'Play video');
+    };
+
+    const pauseOthers = (except) => {
+      document.querySelectorAll('.v-frame video').forEach(v=>{
+        if(v !== except && !v.paused){ v.pause(); }
+      });
+      // show play buttons for paused ones
+      document.querySelectorAll('.v-frame').forEach(fr=>{
+        const v = fr.querySelector('video');
+        const b = fr.querySelector('.v-btn');
+        if(v && b) b.classList.toggle('is-hidden', !v.paused);
+      });
+    };
+
+    frames.forEach(frame=>{
+      const video = frame.querySelector('video.v');
+      const btn = frame.querySelector('.v-btn');
+
+      video.addEventListener('waiting', ()=> setSpinner(frame, true));
+      video.addEventListener('canplaythrough', ()=> setSpinner(frame, false));
+      video.addEventListener('playing', ()=>{
+        setSpinner(frame, false);
+        btn.classList.add('is-hidden');
+        setBtnIcon(btn, true);
+      });
+      video.addEventListener('pause', ()=>{
+        btn.classList.remove('is-hidden');
+        setBtnIcon(btn, false);
+      });
+      btn.addEventListener('click', ()=>{
+        if(video.paused){
+          pauseOthers(video);
+          video.play().catch(()=>{ /* autoplay blocked */ });
+        }else{
+          video.pause();
+        }
+      });
+
+      // click to toggle play/pause
+      frame.addEventListener('click', (e)=>{
+        if(e.target.closest('.v-btn')) return;
+        if(video.paused){ pauseOthers(video); video.play().catch(()=>{}); }
+        else { video.pause(); }
+      });
+    });
+
+    // Lazy load on view; pause when out of view
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(({isIntersecting, target})=>{
+        const video = target.querySelector('video.v');
+        if(isIntersecting){
+          attachSources(target);
+        }else{
+          if(video && !video.paused){ video.pause(); }
+        }
+      });
+    }, {threshold:.25});
+    frames.forEach(f=>io.observe(f));
+  })();
+  </script>
+</body>
+</html>

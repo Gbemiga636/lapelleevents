@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- /index.html — Lapelle Events (single-file HTML+CSS+JS) -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lapelle Events — Curating Unforgettable Moments</title>
+  <meta name="description" content="Lapelle Events is a full‑service event planning and management company delivering bespoke experiences across Nigeria." />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" integrity="sha512-cx..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    :root{
+      --purple-50:#f5edff;
+      --purple-100:#e5d6ff;
+      --purple-200:#cdb3ff;
+      --purple-300:#b28cff;
+      --purple-400:#9966ff;
+      --purple-500:#7a3cff;
+      --purple-600:#652ee6;
+      --purple-700:#5226be;
+      --purple-800:#3e1f93;
+      --purple-900:#2c186b;
+      --white:#ffffff;
+      --black:#0e0b14;
+      --text:#1b132b;
+      --muted:#6d5f80;
+      --grad-1: linear-gradient(135deg, #a770ef 0%, #cf8bf3 35%, #fdb99b 100%);
+      --grad-2: linear-gradient(135deg, #7a3cff 0%, #ff68d7 50%, #a1a9ff 100%);
+      --grad-ink: linear-gradient(90deg, #7a3cff, #cf8bf3 60%, #a1a9ff);
+      --glass: rgba(255,255,255,0.10);
+      --shadow: 0 10px 30px rgba(60, 20, 100, .2);
+      --radius: 16px;
+      --radius-sm: 10px;
+      --transition: 200ms ease;
+      --header-h: 64px;
+    }
+    *,*::before,*::after{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,Arial,Helvetica,sans-serif;
+      color:var(--text);
+      background:var(--white);
+      line-height:1.6;
+      -webkit-font-smoothing:antialiased;
+      text-rendering:optimizeLegibility;
+      scroll-behavior:smooth;
+    }
+    a{color:inherit;text-decoration:none}
+    img{max-width:100%;display:block}
+    /* Loader */
+    .loader{
+      position:fixed;inset:0;z-index:9999;background:radial-gradient(1200px 600px at 20% 10%, #f3e9ff, #f6f0ff 30%, #ffffff 75%);
+      display:grid;place-items:center;overflow:hidden;
+    }
+  .loader__wrap {
+  position: relative;
+  width: min(340px, 90vw);
+  height: 220px;
+  border-radius: var(--radius);
+  background: var(--glass);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(122,60,255,.15);
+  display: flex;
+  justify-content: center;  /* <-- centers horizontally */
+  align-items: center;      /* <-- centers vertically */
+  overflow: hidden;
+}
+
+.loader__logo {
+  width: 180px;
+  position: relative;
+  transform-origin: center;  /* keep spin in place */
+  animation:
+    slideIn 0.8s ease-out forwards,
+    spin 1.2s linear 0.8s infinite;
+}
+
+@keyframes slideIn {
+  from { transform: translateY(-150%) scale(0.8); opacity: 0; }
+  to   { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+@keyframes spin {
+  0%   { transform: translateY(0) rotate(0deg) scale(1); }
+  50%  { transform: translateY(0) rotate(180deg) scale(1.2); }
+  100% { transform: translateY(0) rotate(360deg) scale(1); }
+}
+    .loader--hide{animation: fadeOut .7s ease forwards}
+    @keyframes fadeOut{to{opacity:0; visibility:hidden}}
+    /* Header */
+    .header{
+      position:sticky; top:0; z-index:1000; height:var(--header-h); display:grid; grid-template-columns:48px 1fr 48px; align-items:center; background:rgba(255,255,255,.85); backdrop-filter:saturate(1.2) blur(10px); border-bottom:1px solid rgba(122,60,255,.08)
+    }
+    .header__btn{display:grid; place-items:center; height:48px; width:48px; cursor:pointer}
+    .burger{position:relative; width:22px; height:14px}
+    .burger span, .burger::before, .burger::after{
+      content:""; position:absolute; left:0; right:0; height:2px; background:var(--purple-700); transition: transform .25s ease, opacity .25s ease, top .25s ease;
+    }
+    .burger span{top:6px}
+    .burger::before{top:0}
+    .burger::after{top:12px}
+    .burger.is-open span{opacity:0}
+    .burger.is-open::before{top:6px; transform:rotate(45deg)}
+    .burger.is-open::after{top:6px; transform:rotate(-45deg)}
+    .logo {
+  justify-self: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo img {
+  max-height: 80px; /* fits header height (64px) */
+  width: auto;
+}
+    .header__cta{justify-self:end; color:#25D366}
+    .header__cta a{display:grid; place-items:center; height:48px; width:48px}
+    .header__cta a:focus-visible{outline:3px solid var(--purple-400); outline-offset:2px; border-radius:8px}
+
+/* Step 1: Slide in from top */
+@keyframes slideIn {
+  from { transform: translateY(-150%) scale(0.8); opacity: 0; }
+  to   { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+/* Step 2: Rotate in a circle */
+@keyframes spin {
+  from { transform: translateY(0) rotate(0deg) scale(1); }
+  to   { transform: translateY(0) rotate(360deg) scale(1); }
+}
+
+/* Step 3: Stay centered */
+@keyframes stay {
+  from { transform: translateY(0) rotate(360deg) scale(1); }
+  to   { transform: translateY(0) rotate(360deg) scale(1); }
+}
+    /* Menu Overlay */
+    .nav{
+      position:fixed; inset:0; z-index:999; background:rgba(22,9,34,.72); backdrop-filter: blur(8px); transform: translateY(-100%); transition: transform .28s ease;
+    }
+    .nav.is-open{transform: translateY(0)}
+    .nav__panel{
+      max-width:900px; margin:calc(var(--header-h) + 16px) auto; background:rgba(255,255,255,.92); border-radius:24px; box-shadow:var(--shadow); padding:28px;
+    }
+    .nav__grid{
+      display:grid; gap:16px; grid-template-columns:1fr; text-align:center;
+    }
+    .nav__link{
+      font-size:clamp(18px,2.4vw,22px); font-weight:600; color:var(--purple-800); padding:12px 16px; border-radius:12px; transition: background var(--transition)
+    }
+    .nav__link:hover{background:rgba(122,60,255,.08)}
+    .nav__social{display:flex; gap:12px; justify-content:center; margin-top:16px; color:var(--purple-700)}
+    /* Hero */
+    .hero {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;    /* keeps slideshow landscape */
+  min-height: 400px;       /* fallback for small screens */
+  max-height: 80vh;        /* prevents it from being too tall */
+  overflow: hidden;
+}
+    .hero__slides, .hero__slides::before{
+      position:absolute; inset:0; background-size:cover; background-position:center; transition: opacity 1s ease;
+    }
+    .hero__slides::before{
+      content:""; background:rgba(0,0,0,.45);
+    }
+    .hero__slide{position:absolute; inset:0; opacity:0; background-size:cover; background-position:center; transition:opacity 1s ease}
+    .hero__slide.is-active{opacity:1}
+    .hero__content{
+      position:relative; z-index:1; height:100%; display:grid; place-items:center; text-align:center; color:#fff; padding:0 18px;
+    }
+    .hero__title{
+      font-family:"Playfair Display",serif; font-weight:700; font-size:clamp(28px,5vw,56px);
+      letter-spacing:.3px;
+    }
+    .hero__title .ink{background:var(--grad-2); -webkit-background-clip:text; background-clip:text; color:transparent}
+    .hero__sub{font-size:clamp(14px,2.2vw,20px); color:#f5efff; max-width:800px; margin:12px auto 24px}
+    .hero__chev {
+  margin-top: 12px; /* space after button */
+  text-align: center;
+  color: #ffffffcc;
+  font-size: 22px;
+  animation: bob 1.8s infinite;
+}
+    @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+    /* Sections */
+    section{padding:64px 18px}
+    .container{max-width:1200px; margin:0 auto}
+    .eyebrow{font-size:12px; letter-spacing:.24em; text-transform:uppercase; color:var(--purple-600); font-weight:700}
+    .h2{font-family:"Playfair Display",serif; font-size:clamp(22px,3.6vw,36px); margin:10px 0 14px}
+    .lead{color:var(--muted); font-size:clamp(14px,2vw,18px)}
+    .btn{
+      display:inline-flex; align-items:center; gap:10px; padding:12px 18px; border-radius:999px; color:#fff; background:var(--grad-2); box-shadow:0 8px 18px rgba(122,60,255,.25); font-weight:600; transition: transform var(--transition), box-shadow var(--transition)
+    }
+    .btn:hover{transform:translateY(-2px); box-shadow:0 12px 24px rgba(122,60,255,.35)}
+    .btn:focus-visible{outline:3px solid var(--purple-300); outline-offset:3px}
+    /* Intro */
+    .intro{text-align:center}
+    .intro .lead{max-width:900px; margin:0 auto 22px}
+    /* Full pictures */
+    .full-pic{padding:0}
+    .full-pic .pic{
+      height:56vh; min-height:360px; background-size:cover; background-position:center; position:relative; isolation:isolate;
+    }
+    .full-pic .pic::after{content:""; position:absolute; inset:0; background:linear-gradient(to bottom, rgba(0,0,0,.25), rgba(0,0,0,.0) 40%, rgba(0,0,0,.25))}
+    /* About */
+    .grid-2{display:grid; gap:24px}
+    @media (min-width:900px){.grid-2{grid-template-columns:1.2fr 1fr}}
+    .panel{background:var(--white); border:1px solid rgba(122,60,255,.12); border-radius:var(--radius); padding:24px; box-shadow:var(--shadow)}
+    /* Services */
+    .services{background:linear-gradient(180deg, #faf7ff, #ffffff)}
+    .cards{display:grid; gap:18px}
+    @media (min-width:800px){.cards{grid-template-columns:repeat(4,1fr)}}
+    .card{
+      background:rgba(255,255,255,.92);
+      border:1px solid rgba(122,60,255,.1);
+      border-radius:14px; padding:20px; transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .card:hover{transform:translateY(-4px); box-shadow:0 16px 28px rgba(122,60,255,.15)}
+    .card i{font-size:22px; color:var(--purple-600)}
+    .card .title{font-weight:700; margin:10px 0 6px}
+    .card .text{color:var(--muted); font-size:14px}
+    /* Why Lapelle */
+    .why{background:radial-gradient(600px 300px at 80% 0%, #f2eaff, #fff)}
+    .why__grid{display:grid; gap:16px}
+    @media (min-width:900px){.why__grid{grid-template-columns:repeat(3,1fr)}}
+    .why__item{
+      padding:18px; border:1px dashed rgba(122,60,255,.28); border-radius:14px; background:#fff;
+    }
+    .why__item .k{font-weight:700}
+    /* Team */
+    .team__grid{display:grid; gap:18px}
+    @media (min-width:1000px){.team__grid{grid-template-columns:repeat(4,1fr)}}
+    .team__card{background:#fff; border:1px solid rgba(122,60,255,.12); border-radius:14px; overflow:hidden; box-shadow:var(--shadow)}
+    .team__meta{padding:16px}
+    .team__role{color:var(--purple-700); font-weight:600; font-size:14px}
+    .team__bio{color:var(--muted); font-size:14px}
+    .avatar {
+  aspect-ratio: 4/3;
+  background:linear-gradient(135deg,#f1e9ff,#ffffff);
+  overflow:hidden;   /* keeps img inside */
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;  /* crop instead of squish */
+  border-radius: 0;   /* remove circle */
+  display: block;
+}
+    /* Testimonials */
+    .testimonials{background:linear-gradient(180deg,#faf7ff,#fff)}
+    .ts__wrap{position:relative}
+    .ts__viewport{overflow:hidden}
+    .ts__track{display:flex; transition: transform .45s ease}
+    .ts__item{
+      min-width:100%; padding:22px; 
+    }
+    .ts__card{
+      background:#fff; border:1px solid rgba(122,60,255,.12); border-radius:16px; padding:22px; box-shadow:var(--shadow)
+    }
+    .ts__nav{
+      position:absolute; inset-block:0; width:100%; display:flex; align-items:center; justify-content:space-between; pointer-events:none;
+    }
+    .ts__btn{
+      pointer-events:auto; background:#fff; border:1px solid rgba(122,60,255,.22); width:40px; height:40px; border-radius:50%; display:grid; place-items:center; color:var(--purple-700); box-shadow:var(--shadow)
+    }
+    .ts__dots{display:flex; gap:8px; justify-content:center; margin-top:16px}
+    .ts__dot{width:8px; height:8px; border-radius:50%; background:#d9ccff; transition: transform var(--transition), background var(--transition)}
+    .ts__dot.is-active{background:var(--purple-600); transform:scale(1.2)}
+    /* Clients */
+   .clients__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;                 /* more spacing between logos */
+  max-width: 600px;          /* control total width of the grid */
+  margin: 0 auto;            /* center the grid horizontally */
+  justify-items: center;     /* center each logo in its grid cell */
+}
+
+.client {
+  width: 100%;               /* fill available cell width */
+  aspect-ratio: 1 / 1;       /* make logos more square and bigger */
+  min-height: 150px;         /* ensures enough height */
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(122,60,255,.16);
+  border-radius: 12px;
+  background: #fff;
+  font-weight: 600;
+}
+
+.client img {
+  max-width: 80%;            /* keep logos scaled nicely */
+  max-height: 80%;
+  object-fit: contain;
+}
+    /* Footer */
+    footer{background:#120a20; color:#ddd}
+    .footer__grid{display:grid; gap:24px}
+    @media (min-width:900px){.footer__grid{grid-template-columns:2fr 1fr 1fr}}
+    .footer__title{font-weight:700; color:#fff; margin-bottom:10px}
+    .footer__social{display:flex; gap:10px}
+    .copy {
+  text-align:center;
+  margin-top:24px;
+  padding-top:16px;
+  font-size:13px;
+  color:#bdb3d7;
+  border-top:1px solid rgba(255,255,255,.08);
+}
+    /* Reveal on scroll */
+    /* Reduced motion */
+    @media (prefers-reduced-motion:reduce){
+      *{animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important}
+    }
+  </style>
+</head>
+<body>
+  <!-- Loader -->
+  <div class="loader" role="status" aria-live="polite">
+   <div class="loader__wrap">
+  <img src="logo.png" alt="Lapelle Events logo" class="loader__logo" />
+</div>
+  </div>
+
+  <!-- Menu Overlay -->
+  <nav class="nav" id="nav" aria-hidden="true">
+    <div class="nav__panel container">
+      <div class="nav__grid">
+        <a class="nav__link" href="#home">.</a>
+        <a class="nav__link" href="index.html">Home</a>
+        <a class="nav__link" href="about.html">About</a>
+        <a class="nav__link" href="enquiry.html">Enquiry</a>
+        <a class="nav__link" href="gallery.html">Gallery</a>
+      <a class="nav__link" href="contact.html">Contact</a>
+      </div>
+      <div class="nav__social" aria-label="Social links">
+        <a href="https://wa.me/2348023394254?text=I%20would%20like%20to%20make%20enquiry%20about%20__" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+        <a href="https://www.instagram.com/lapelleevents?igsh=MXc2cXk4M2p4eXIzeQ==" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+        <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook"></i></a>
+        <a href="#" aria-label="X / Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Header -->
+  <header class="header container" id="home">
+    <button class="header__btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="nav">
+      <span class="burger" id="burger"><span></span></span>
+    </button>
+    <div class="logo">
+  <img src="logo.png" alt="Lapelle Events logo" />
+</div>
+    <div class="header__cta">
+      <a href="https://wa.me/2348023394254?text=I%20would%20like%20to%20make%20enquiry%20about%20__" aria-label="Chat on WhatsApp">
+        <i class="fa-brands fa-whatsapp fa-lg"></i>
+      </a>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero" aria-label="Hero slideshow">
+    <div class="hero__slides" aria-hidden="true">
+      <div class="hero__slide is-active" style="background-image:url('bg1.jpeg');"></div>
+      <div class="hero__slide" style="background-image:url('bg2.jpeg');"></div>
+      <div class="hero__slide" style="background-image:url('bg3.jpeg');"></div>
+      <div class="hero__slide" style="background-image:url('bg4.jpeg');"></div>
+    </div>
+    <div class="hero__content container">
+      <div>
+        <h1 class="hero__title">Welcome to <span class="ink">Lapelle Events</span></h1>
+        <p class="hero__sub">Come—let’s turn your milestones into signature moments. From concept to curtain call, we orchestrate seamless experiences you’ll remember forever.</p>
+        <a class="btn" href="https://wa.me/2348023394254?text=I%20would%20like%20to%20make%20enquiry%20about%20__"><i class="fa-brands fa-whatsapp"></i> Start a WhatsApp Enquiry</a>
+      <div class="hero__chev" aria-hidden="true"><i class="fa-solid fa-angles-down"></i></div>
+    </div>
+  </section>
+
+  <!-- Intro CTA -->
+  <section class="intro" data-aos="fade-up">
+    <div class="container">
+      <div class="eyebrow">Full‑Service Planning</div>
+      <h2 class="h2">Stress less. Celebrate more.</h2>
+      <p class="lead">From boardrooms to ballrooms, we coordinate venues, vendors, timelines, and guest experiences with precision—so you can be present in the moments that matter.</p>
+      <a class="btn" href="enquiry.html""><i class="fa-solid fa-calendar-check"></i> Talk about that event with us today</a>
+    </div>
+  </section>
+
+  <!-- Full‑bleed Photos -->
+  <section class="full-pic reveal" aria-label="Featured events imagery">
+    <div class="pic" style="background-image:url('p1.jpeg');"></div>
+    <div class="pic" style="background-image:url('p2.jpeg');"></div>
+    <div class="pic" style="background-image:url('p3.jpeg');"></div>
+  </section>
+
+  <!-- About -->
+<section id="about" data-aos="fade-up">
+    <div class="container grid-2">
+      <div class="panel">
+        <div class="eyebrow">About Us</div>
+        <h2 class="h2">Meticulous planning. Distinctive style.</h2>
+        <p class="lead">
+          Lapelle Events is a full‑service planning and management company delivering bespoke experiences across Nigeria.
+          As seasoned planners, we handle every detail—from the first idea to the final applause—so your event feels effortless, personal, and unforgettable.
+          Every celebration is uniquely designed and expertly produced to your satisfaction.
+        </p>
+      </div>
+      <div class="panel">
+        <h3 class="h2" style="font-size:22px">What sets us apart</h3>
+        <ul style="margin:0; padding-left:18px; color:var(--muted)">
+          <li>Creative concepts that align with your brand and story</li>
+          <li>Transparent budgets and timeline stewardship</li>
+          <li>Trusted vendor network across major Nigerian cities</li>
+          <li>On‑site direction and guest experience management</li>
+          <li>Post‑event wrap and insights for continuous improvement</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section id="services" class="services" data-aos="fade-right">
+    <div class="container">
+      <div class="eyebrow">Our Services</div>
+      <h2 class="h2">Everything your event needs—end to end</h2>
+      <div class="cards">
+        <div class="card">
+          <i class="fa-solid fa-briefcase"></i>
+          <div class="title">Corporate Event Planning & Coordination</div>
+          <div class="text">Conferences, AGMs, retreats, award nights—delivered on message and on schedule.</div>
+        </div>
+        <div class="card">
+          <i class="fa-solid fa-users"></i>
+          <div class="title">Guest Management Services</div>
+          <div class="text">Invitations, RSVPs, seating, protocols, meet & greet, and VIP handling.</div>
+        </div>
+        <div class="card">
+          <i class="fa-solid fa-bullhorn"></i>
+          <div class="title">Product Launch & Road Shows</div>
+          <div class="text">Immersive brand moments, mobile showcases, and press-worthy unveilings.</div>
+        </div>
+        <div class="card">
+          <i class="fa-solid fa-map-location-dot"></i>
+          <div class="title">Venue Sourcing & Designing</div>
+          <div class="text">Right-fit venues, ambience design, decor direction, and technical production.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why Lapelle -->
+  <section id="why" data-aos="fade-left">
+    <div class="container">
+      <div class="eyebrow">Why Lapelle</div>
+      <h2 class="h2">Six reasons clients choose us</h2>
+      <div class="why__grid">
+        <div class="why__item"><i class="fa-solid fa-wand-magic-sparkles"></i> <span class="k">Signature creativity:</span> fresh ideas tailored to your brief.</div>
+        <div class="why__item"><i class="fa-solid fa-timeline"></i> <span class="k">Flawless execution:</span> detailed run-sheets and contingency plans.</div>
+        <div class="why__item"><i class="fa-solid fa-handshake-angle"></i> <span class="k">Reliable partners:</span> vetted vendors and negotiated rates.</div>
+        <div class="why__item"><i class="fa-solid fa-shield-heart"></i> <span class="k">Guest-first mindset:</span> inclusive, seamless experiences.</div>
+        <div class="why__item"><i class="fa-solid fa-chart-line"></i> <span class="k">ROI-driven:</span> measurable outcomes for corporate objectives.</div>
+        <div class="why__item"><i class="fa-solid fa-leaf"></i> <span class="k">Sustainable choices:</span> smarter materials and waste reduction.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Team -->
+  <section id="team" data-aos="fade-up">
+    <div class="container">
+      <div class="eyebrow">Our Team</div>
+      <h2 class="h2">The brain behind lapelle events</h2>
+      <div class="team__grid">
+      <article class="team__card">
+  <div class="avatar">
+    <img src="lap2.jpeg" alt="Ojuolape Femi-Ayodele" />
+  </div>
+  <div class="team__meta">
+    <div class="h2" style="font-size:20px;margin:0">Ojuolape Femi-Ayodele</div>
+    <div class="team__role">MD/CEO</div>
+    <p class="team__bio">B.Sc. Biochemistry (OOU). Student member of CIPM & NIM. Experience spans marketing, advertising, QA, and event planning. Former roles at LASAA, GTBank, and UAC Foods.</p>
+  </div>
+</article>
+        
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section id="testimonials" data-aos="fade-down">
+    <div class="container ts__wrap">
+      <div class="eyebrow">Testimonials</div>
+      <h2 class="h2">What our clients are saying</h2>
+
+      <div class="ts__viewport">
+        <div class="ts__track" id="tsTrack" aria-live="polite">
+          <!-- 1 -->
+          <div class="ts__item">
+            <div class="ts__card">
+              <p>“From the first brainstorm to the last guest departure, Lapelle Events ran our annual sales conference like a symphony. The flow, timing, and guest support were impeccable—and our executives kept using the word ‘effortless’. That only happens when a team obsesses over details behind the scenes.”</p>
+              <strong>— Ada, Regional Sales Director</strong>
+            </div>
+          </div>
+          <!-- 2 -->
+          <div class="ts__item">
+            <div class="ts__card">
+              <p>“Our product launch spanned three cities in five days. Lapelle coordinated venues, staging, and media without a single hiccup. The brand moments were vivid, the press loved it, and our customers are still talking about the demo experience.”</p>
+              <strong>— Kunle, Head of Marketing</strong>
+            </div>
+          </div>
+          <!-- 3 -->
+          <div class="ts__item">
+            <div class="ts__card">
+              <p>“We wanted an intimate wedding with modern elegance. Lapelle translated our Pinterest chaos into a cohesive design that felt like ‘us’. Vendors were prompt, the program flowed, and our parents were relaxed—miracle!”</p>
+              <strong>— Ife & Tola</strong>
+            </div>
+          </div>
+          <!-- 4 -->
+          <div class="ts__item">
+            <div class="ts__card">
+              <p>“The guest management was next level: RSVP tracking, seat maps, and friendly ushers who actually knew the agenda. VIPs were impressed, which was critical for our fundraiser’s success.”</p>
+              <strong>— Bisi, Non‑profit Coordinator</strong>
+            </div>
+          </div>
+          <!-- 5 -->
+          <div class="ts__item">
+            <div class="ts__card">
+              <p>“Lapelle turned a warehouse into a branded experience for our roadshow—light, sound, and motion in perfect balance. Load‑in/load‑out was surgical, saving us time and cost.”</p>
+              <strong>— Damilola, Events Producer</strong>
+            </div>
+          </div>
+          <!-- 6 -->
+          <div class="ts__item">
+            <div class="ts__card">
+              <p>“Professional, creative, and calm under pressure. They kept suppliers aligned and found elegant solutions to last‑minute changes. We’ll be partnering again.”</p>
+              <strong>— Chidi, Corporate Affairs</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ts__nav">
+        <button class="ts__btn" id="prevTs" aria-label="Previous testimonial"><i class="fa-solid fa-chevron-left"></i></button>
+        <button class="ts__btn" id="nextTs" aria-label="Next testimonial"><i class="fa-solid fa-chevron-right"></i></button>
+      </div>
+      <div class="ts__dots" id="tsDots" role="tablist" aria-label="Testimonials navigation"></div>
+    </div>
+  </section>
+
+  <!-- Clients -->
+  <section id="clients" data-aos="zoom-in">
+    <div class="container">
+      <div class="eyebrow">Clients</div>
+      <h2 class="h2">Trusted by brands and celebrants</h2>
+      <div class="clients__grid" aria-label="Client logos (placeholders)">
+        <div class="clients__grid" aria-label="Client logos">
+  <div class="client"><img src="c1.jpeg" alt="Client 01 logo"></div>
+  <div class="client"><img src="c2.jpeg" alt="Client 02 logo"></div>
+  <div class="client"><img src="c3.jpeg" alt="Client 03 logo"></div>
+  <div class="client"><img src="c4.jpeg" alt="Client 04 logo"></div>
+  <div class="client"><img src="c5.jpeg" alt="Client 05 logo"></div>
+  <div class="client"><img src="c6.jpeg" alt="Client 06 logo"></div>
+  <div class="client"><img src="c7.jpeg" alt="Client 07 logo"></div>
+  <div class="client"><img src="c8.jpeg" alt="Client 08 logo"></div>
+  <div class="client"><img src="c9.jpeg" alt="Client 09 logo"></div>
+  <div class="client"><img src="c10.jpeg" alt="Client 10 logo"></div>
+  <div class="client"><img src="c11.jpeg" alt="Client 11 logo"></div>
+  <div class="client"><img src="c12.jpeg" alt="Client 12 logo"></div>
+  <div class="client"><img src="c13.jpeg" alt="Client 13 logo"></div>
+  <div class="client"><img src="c14.jpeg" alt="Client 14 logo"></div>
+  <div class="client"><img src="c15.jpeg" alt="Client 15 logo"></div>
+<div class="client"><img src="c16.jpeg" alt="Client 16 logo"></div>
+</div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer id="contact">
+    <div class="container" style="padding:38px 18px">
+      <div class="footer__grid">
+        <div>
+          <div class="footer__title">Contact Us</div>
+          <p>
+            <strong>Address:</strong> 11A, Oroleye Crescent, Off Salvation Bus-stop, Opebi, Lagos, Nigeria.<br/>
+            <strong>Telephone:</strong> <a href="tel:+2348188630237">+234-818-863-0237</a>, <a href="tel:+2348023394254">+234-802-339-4254</a><br/>
+            <strong>Email:</strong> <a href="mailto:lapelle.events@gmail.com">lapelle.events@gmail.com</a>, <a href="mailto:lapelle2g@yahoo.com">lapelle2g@yahoo.com</a>
+          </p>
+          <div class="footer__social">
+            <a href="https://wa.me/2348023394254?text=I%20would%20like%20to%20make%20enquiry%20about%20__" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+            <a href="https://www.instagram.com/lapelleevents?igsh=MXc2cXk4M2p4eXIzeQ==" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook"></i></a>
+            <a href="#" aria-label="X / Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+            <a href="mailto:lapelle.events@gmail.com" aria-label="Email"><i class="fa-solid fa-envelope"></i></a>
+          </div>
+        </div>
+        <div>
+          <div class="footer__title">Quick Links</div>
+          <ul style="margin:0; padding-left:18px">
+            <li><a href="#services">Services</a></li>
+            <li><a href="#why">Why Lapelle</a></li>
+            <li><a href="#team">Team</a></li>
+            <li><a href="enquiry.html">Enquiry</a></li>
+          </ul>
+        </div>
+        <div>
+        </div>
+      </div>
+      <div class="copy">
+        <span>© 2025 Lapelle Events -All rights reserved </span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    /* Loader hide logic (why: ensure quick exit even if resources stall) */
+    /* Loader hide logic */
+(function(){
+  const ld = document.querySelector('.loader');
+  const hide = () => ld && ld.classList.add('loader--hide');
+  // remove auto-hide on window load
+  setTimeout(hide, 3000); // adjust time here if you want longer
+})();
+
+    /* Menu toggle + accessibility */
+    (function(){
+      const nav = document.getElementById('nav');
+      const btn = document.getElementById('menuBtn');
+      const burger = document.getElementById('burger');
+      const toggle = (force) => {
+        const open = force ?? !nav.classList.contains('is-open');
+        nav.classList.toggle('is-open', open);
+        burger.classList.toggle('is-open', open);
+        btn.setAttribute('aria-expanded', String(open));
+        nav.setAttribute('aria-hidden', String(!open));
+        document.body.style.overflow = open ? 'hidden':'';
+      };
+      btn.addEventListener('click', ()=>toggle());
+      nav.addEventListener('click', (e)=>{ if(e.target.id==='nav') toggle(false) });
+      document.querySelectorAll('.nav__link').forEach(a=>a.addEventListener('click', ()=>toggle(false)));
+      document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') toggle(false) });
+    })();
+
+    /* Hero slideshow */
+    (function(){
+      const slides = Array.from(document.querySelectorAll('.hero__slide'));
+      if(!slides.length) return;
+      let i = 0, tId;
+      const show = (n)=>{
+        slides[i].classList.remove('is-active');
+        i = (n+slides.length)%slides.length;
+        slides[i].classList.add('is-active');
+      };
+      const next = ()=>show(i+1);
+      const start = ()=> tId = setInterval(next, 4500);
+      const stop = ()=> clearInterval(tId);
+      start();
+      document.querySelector('.hero').addEventListener('pointerenter', stop);
+      document.querySelector('.hero').addEventListener('pointerleave', start);
+      // Preload for smoother fade
+      slides.forEach(s=>{ const img = new Image(); const url = s.style.backgroundImage.slice(5,-2); img.src = url; });
+    })();
+
+    /* Reveal on scroll */
+    
+
+    /* Testimonials carousel (why: simple, accessible, keyboardable) */
+    (function(){
+      const track = document.getElementById('tsTrack');
+      const items = Array.from(track.children);
+      const prev = document.getElementById('prevTs');
+      const next = document.getElementById('nextTs');
+      const dotsWrap = document.getElementById('tsDots');
+      let index = 0, tId;
+
+      function renderDots(){
+        dotsWrap.innerHTML = '';
+        items.forEach((_,i)=>{
+          const d = document.createElement('button');
+          d.className = 'ts__dot' + (i===index?' is-active':'');
+          d.setAttribute('aria-label','Go to testimonial '+(i+1));
+          d.addEventListener('click', ()=>go(i));
+          dotsWrap.appendChild(d);
+        });
+      }
+      function update(){
+        const width = track.parentElement.clientWidth;
+        track.style.transform = `translateX(-${index*width}px)`;
+        Array.from(dotsWrap.children).forEach((d,i)=>d.classList.toggle('is-active', i===index));
+      }
+      function go(i){
+        index = (i+items.length)%items.length;
+        update();
+      }
+      function nextFn(){ go(index+1) }
+      function prevFn(){ go(index-1) }
+      function start(){ tId = setInterval(nextFn, 6000) }
+      function stop(){ clearInterval(tId) }
+
+      window.addEventListener('resize', update);
+      next.addEventListener('click', nextFn);
+      prev.addEventListener('click', prevFn);
+      track.parentElement.addEventListener('pointerenter', stop);
+      track.parentElement.addEventListener('pointerleave', start);
+
+      renderDots(); update(); start();
+    })();
+  </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+<script>
+  AOS.init({
+    duration: 800,  // ms
+    once: true      // animate only once
+  });
+</script>
+</body>
+</html>
